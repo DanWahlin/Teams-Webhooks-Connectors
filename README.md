@@ -1,4 +1,4 @@
-# Teams Webhooks - Microsoft Teams App
+# Teams Webhooks - Microsoft Teams App Exercise 2
 
 Generate a Microsoft Teams application.
 

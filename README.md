@@ -1,6 +1,6 @@
 # Teams Webhooks - Microsoft Teams App Exercise 1
 
-This is based on Exercise 1 from the `Connect web services to Microsoft Teams with webhooks and Office 365 Connectors` located at https://docs.microsoft.com/en-us/learn/modules/msteams-webhooks-connectors.
+This is based on Exercise 1 from the `Connect web services to Microsoft Teams with webhooks and Office 365 Connectors` Microsoft Learn module located at https://docs.microsoft.com/en-us/learn/modules/msteams-webhooks-connectors.
 
 ## Getting started with Microsoft Teams Apps development
 

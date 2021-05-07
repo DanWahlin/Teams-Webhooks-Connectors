@@ -1,9 +1,0 @@
-{
-  "generator-teams": {
-    "promptValues": {
-      "developer": "Contoso"
-    },
-    "libraryName": "teamsWebhooks",
-    "generator-version": "3.0.3"
-  }
-}

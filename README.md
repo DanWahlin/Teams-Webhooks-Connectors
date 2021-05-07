@@ -1,4 +1,4 @@
-# Teams Webhooks - Microsoft Teams App Exercise 1
+# Exercise 1 - Create Outgoing Webhooks
 
 This is based on Exercise 1 from the `Connect web services to Microsoft Teams with webhooks and Office 365 Connectors` Microsoft Learn module located at https://docs.microsoft.com/en-us/learn/modules/msteams-webhooks-connectors.
 

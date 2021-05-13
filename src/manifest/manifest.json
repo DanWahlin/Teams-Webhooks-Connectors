@@ -11,8 +11,8 @@
     "termsOfUseUrl": "https://{{HOSTNAME}}/tou.html"
   },
   "name": {
-    "short": "Teams Webhooks",
-    "full": "Teams Webhooks"
+    "short": "My First Teams Connector",
+    "full": "My First Teams Connector"
   },
   "description": {
     "short": "TODO: add short description here",
@@ -23,11 +23,15 @@
     "color": "icon-color.png"
   },
   "accentColor": "#D85028",
-  "configurableTabs": [],
-  "staticTabs": [],
-  "bots": [],
-  "connectors": [],
-  "composeExtensions": [],
+  "connectors": [
+    {
+      "connectorId": "{{CONNECTOR_ID}}",
+      "configurationUrl": "https://{{HOSTNAME}}/myFirstTeamsConnector/config.html?name={loginHint}&tenant={tid}&group={groupId}&theme={theme}",
+      "scopes": [
+        "team"
+      ]
+    }
+  ],
   "permissions": [
     "identity",
     "messageTeamMembers"

@@ -3,7 +3,7 @@
     "promptValues": {
       "developer": "Contoso"
     },
-    "libraryName": "teamsWebhooks",
+    "libraryName": "myFirstTeamsConnector",
     "generator-version": "3.0.3"
   }
 }

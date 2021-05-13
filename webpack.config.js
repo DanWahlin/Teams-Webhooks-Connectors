@@ -57,7 +57,7 @@ const config = [{
         path: path.join(__dirname, "/dist/web/scripts"),
         filename: "[name].js",
         libraryTarget: "umd",
-        library: "teamsWebhooks",
+        library: "myFirstTeamsConnector",
         publicPath: "/scripts/"
     },
     externals: {},

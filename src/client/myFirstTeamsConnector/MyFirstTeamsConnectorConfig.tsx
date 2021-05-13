@@ -21,7 +21,7 @@ const availableColors: IColor[] = [
 ];
 
 /**
- * Implementation of the MyFirstTeamsConnector Connector connect page
+ * Implementation of the myFirstTeamsConnector Connector connect page
  */
 export const MyFirstTeamsConnectorConfig = () => {
 
@@ -30,45 +30,57 @@ export const MyFirstTeamsConnectorConfig = () => {
 
     useEffect(() => {
         if (context) {
-            microsoftTeams.settings.registerOnSaveHandler((saveEvent: microsoftTeams.settings.SaveEvent) => {
-                // INFO: Should really be of type microsoftTeams.settings.Settings, but configName does not exist in the Teams JS SDK
-                const settings: any = {
-                    entityId: color ? color.code : availableColors[0].code,
-                    contentUrl: `https://${process.env.HOSTNAME}/myFirstTeamsConnector/config.html?name={loginHint}&tenant={tid}&group={groupId}&theme={theme}`,
-                    configName: color ? color.title : availableColors[0].title
-                };
-                microsoftTeams.settings.setSettings(settings);
+            if (color) {
+                // This will overwrite the original registerOnSaveHandler 
+                // if called more than once otherwise color gets capture and will be undefined
+                microsoftTeams.settings.registerOnSaveHandler((saveEvent: microsoftTeams.settings.SaveEvent) => {
+                    // INFO: Should really be of type microsoftTeams.settings.Settings, but configName does not exist in the Teams JS SDK
+                    const settings: any = {
+                        entityId: color ? color.code : availableColors[0].code,
+                        contentUrl: `https://${process.env.HOSTNAME}/myFirstTeamsConnector/config.html?name={loginHint}&tenant={tid}&group={groupId}&theme={theme}`,
+                        configName: color ? color.title : availableColors[0].title
+                    };
+                    microsoftTeams.settings.setSettings(settings);
 
-                microsoftTeams.settings.getSettings((setting: any) => {
-                    fetch("/api/connector/connect", {
-                        method: "POST",
-                        headers: [
-                            ["Content-Type", "application/json"]
-                        ],
-                        body: JSON.stringify({
-                            webhookUrl: setting.webhookUrl,
-                            user: setting.userObjectId,
-                            appType: setting.appType,
-                            groupName: context.groupId,
-                            color: color ? color.code : availableColors[0].code,
-                            state: "myAppsState"
-                        })
-                    }).then(response => {
-                        if (response.status === 200 || response.status === 302) {
-                            saveEvent.notifySuccess();
-                        } else {
-                            saveEvent.notifyFailure(response.statusText);
-                        }
-                    }).catch(e => {
-                        saveEvent.notifyFailure(e);
+                    microsoftTeams.settings.getSettings((setting: any) => {
+                        fetch("/api/connector/connect", {
+                            method: "POST",
+                            headers: [
+                                ["Content-Type", "application/json"]
+                            ],
+                            body: JSON.stringify({
+                                webhookUrl: setting.webhookUrl,
+                                user: setting.userObjectId,
+                                appType: setting.appType,
+                                groupName: context.groupId,
+                                color: color ? color.code : availableColors[0].code,
+                                state: "myAppsState"
+                            })
+                        }).then(response => {
+                            if (response.status === 200 || response.status === 302) {
+                                saveEvent.notifySuccess();
+                            } else {
+                                saveEvent.notifyFailure(response.statusText);
+                            }
+                        }).catch(e => {
+                            saveEvent.notifyFailure(e);
+                        });
                     });
                 });
-            });
-            setColor(availableColors.find(c => c.code === context.entityId));
-            microsoftTeams.settings.setValidityState(color !== undefined);
+            }
+
+            // Load saved color value from Teams settings and call setColor() with value (called once as context initially loads)
+            if (!color) {
+                microsoftTeams.settings.getSettings((setting: any) => {
+                    if (setting.entityId) {
+                        setColor(availableColors.find(c => c.code === setting.entityId));
+                        microsoftTeams.settings.setValidityState(color !== undefined);
+                    }
+                });
+            }
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [context]);
+    }, [context, color]);
 
     const colors = availableColors.map(clr => {
         return {
@@ -89,6 +101,7 @@ export const MyFirstTeamsConnectorConfig = () => {
                         <Dropdown
                             items={colors}
                             placeholder="Select card color"
+                            value={color?.title}
                             checkable
                         />
                     </div>

@@ -4,6 +4,21 @@ Generate a Microsoft Teams application.
 
 TODO: Add your documentation here
 
+NOTES - Similar to the lab except:
+
+1. Create your `.env` file based on the `.env.sample` file, inserting your hostname and connector ID
+
+2. When posting to your the /api/connector/ping endpoint to cause a notification to be sent, use this payload:
+
+~~~json
+{
+    "color": "blue",
+    "message": "All blues"
+}
+~~~
+
+Only connectors that are configured with the matching color will be fired; this is a more realistic scenario where the configuration information is being used to determine the connectors that are notified.
+
 ## Getting started with Microsoft Teams Apps development
 
 Head on over to [Microsoft Teams official documentation](https://developer.microsoft.com/en-us/microsoft-teams) to learn how to build Microsoft Teams Tabs or the [Microsoft Teams Yeoman generator docs](https://github.com/PnP/generator-teams/docs) for details on how this solution is set up.

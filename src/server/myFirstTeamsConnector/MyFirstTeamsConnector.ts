@@ -7,6 +7,25 @@ import JsonDB = require("node-json-db");
 
 const log = debug("msteams");
 
+// 1. Add this from MyFirstTeamsConnectorConfig.tsx:
+interface IColor {
+    title: string;
+    code: string;
+    dataUri: string;
+}
+const availableColors: IColor[] = [
+    {
+        title: "Blue",
+        code: "#dce6ee",
+        dataUri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADqSURBVHhe7dAxAcAwDMCwdPxRDN1g9BmA+Jce/z7zfsPO85cFswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKz1mYuYn0CUg/J07YAAAAASUVORK5CYII="
+    },
+    {
+        title: "Orange",
+        code: "#ffc300",
+        dataUri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAECSURBVHhe7dExAcAwDMCwbGQKc9CzpyB8SI8B+Nnv7JDx3hJhSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhMYbEGBJjSIwhKTM/gysDbIBTBXYAAAAASUVORK5CYII="
+    }
+];
+
 /**
  * The connector data interface
  */
@@ -64,28 +83,31 @@ export class MyFirstTeamsConnector implements IConnector {
             throw error;
         }
 
+        // 2. Add 5 lines:
+        const requestedColorTitle: string = req?.body?.color;
+        const requestedColor = availableColors.find(
+            c => c.title.toLowerCase() === requestedColorTitle.toLowerCase());
+        let connectors = this.connectors.getData("/connectors") as IMyFirstTeamsConnectorData[];
+        connectors = connectors.filter(c => c.color.toLowerCase() === requestedColor?.code);
+
         // send pings to all subscribers
-        return (this.connectors.getData("/connectors") as IMyFirstTeamsConnectorData[]).map((connector, index) => {
+        // 3. Change this:
+        // return (this.connectors.getData("/connectors") as IMyFirstTeamsConnectorData[]).map((connector, index) => {
+        // to this:
+        return connectors.map((connector, index) => {
+
             return new Promise<void>((resolve, reject) => {
                 // TODO: implement adaptive cards when supported
+                console.log(`Sending message to connector ${connector.color}`);
+                // 4. Update the card as follows:
                 const card = {
-                    title: "Sample Connector",
-                    text: "This is a sample Office 365 Connector",
+                    title: "Sample connector",
+                    text: `Notification from the ${requestedColor?.title} zone`,
                     sections: [
                         {
-                            activityTitle: "Ping",
-                            activityText: "Sample ping ",
-                            activityImage: `https://${process.env.HOSTNAME}/assets/icon.png`,
-                            facts: [
-                                {
-                                    name: "Generator",
-                                    value: "teams"
-                                },
-                                {
-                                    name: "Created by",
-                                    value: connector.user
-                                }
-                            ]
+                            activityTitle: "Here is your message",
+                            activityText: req.body?.message,
+                            activityImage: requestedColor?.dataUri
                         }
                     ],
                     potentialAction: [{

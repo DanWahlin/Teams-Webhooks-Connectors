@@ -31,7 +31,7 @@ export const MyFirstTeamsConnectorConfig = () => {
     useEffect(() => {
         if (context) {
             if (color) {
-                // This will overwrite the original registerOnSaveHandler 
+                // This will overwrite the original registerOnSaveHandler
                 // if called more than once otherwise color gets capture and will be undefined
                 microsoftTeams.settings.registerOnSaveHandler((saveEvent: microsoftTeams.settings.SaveEvent) => {
                     // INFO: Should really be of type microsoftTeams.settings.Settings, but configName does not exist in the Teams JS SDK
